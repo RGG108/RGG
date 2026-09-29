@@ -29,10 +29,12 @@
     "typecheck": "npm run typecheck:hostinger && pnpm --filter @workspace/mockup-sandbox --if-present run typecheck"
   },
   "private": true,
+  "dependencies": {
+    "typescript": "~5.9.3"
+  },
   "devDependencies": {
     "@playwright/test": "^1.63.0",
-    "prettier": "^3.8.3",
-    "typescript": "~5.9.3"
+    "prettier": "^3.8.3"
   },
   "overrides": {
     "@esbuild-kit/esm-loader": "npm:tsx@^4.21.0",
