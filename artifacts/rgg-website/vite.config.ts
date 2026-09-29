@@ -148,13 +148,13 @@ function renderRouteContent(route: string, metadata: PageMetadata): string {
     ).href;
     return `<li><a href="${href}">${escapeHtml(ROUTE_METADATA[path].title)}</a></li>`;
   }).join("");
-  return `<main><article><h1>${escapeHtml(metadata.title.split(" | ")[0])}</h1><p>${escapeHtml(metadata.description)}</p></article><nav aria-label="Public pages"><ul>${links}</ul></nav></main>`;
+  return `<main class="prerender-fallback"><article><h1>${escapeHtml(metadata.title.split(" | ")[0])}</h1><p>${escapeHtml(metadata.description)}</p></article><nav aria-label="Public pages"><ul>${links}</ul></nav></main>`;
 }
 
 function renderPublicationContent(publication: ResearchPublication): string {
   const metadata = metadataForPublication(publication);
   const authors = publication.authors.map((author) => escapeHtml(author.name)).join(", ");
-  return `<main><article><header><h1>${escapeHtml(publication.title)}</h1>${publication.subtitle ? `<p>${escapeHtml(publication.subtitle)}</p>` : ""}<p>${authors}</p></header><p>${escapeHtml(publication.abstract)}</p>${publication.content ? `<div>${escapeHtml(publication.content)}</div>` : ""}</article></main>`;
+  return `<main class="prerender-fallback"><article><header><h1>${escapeHtml(publication.title)}</h1>${publication.subtitle ? `<p>${escapeHtml(publication.subtitle)}</p>` : ""}<p>${authors}</p></header><p>${escapeHtml(publication.abstract)}</p>${publication.content ? `<div>${escapeHtml(publication.content)}</div>` : ""}</article></main>`;
 }
 
 async function loadPublishedPublicationsFromApi(

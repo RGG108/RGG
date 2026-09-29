@@ -3,6 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <!-- Keep prerendered content available without JavaScript, but never flash it while the app starts. -->
+    <script>document.documentElement.classList.add("js-enabled");</script>
+    <style>
+      html, body { background: #060806; }
+      .js-enabled #root > .prerender-fallback { display: none; }
+    </style>
     <title>Reclaiming the Green Gold</title>
     <meta name="description" content="Cannabis at the Crossroads of Health, Justice and Sustainable Development." />
     <meta name="robots" content="index, follow" />
