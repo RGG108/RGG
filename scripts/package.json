@@ -9,8 +9,10 @@
     "test:post-merge": "bash ./post-merge.test.sh",
     "test:migration-baseline": "bash ./migration-baseline.test.sh"
   },
+  "dependencies": {
+    "@types/node": "^25.3.3"
+  },
   "devDependencies": {
-    "@types/node": "^25.3.3",
     "tsx": "^4.21.0"
   }
 }
