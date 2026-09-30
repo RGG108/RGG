@@ -127,6 +127,15 @@ export function createReadinessProbe(
   };
 }
 
+console.log("[database-ssl-config]", {
+  databaseSsl: process.env.DATABASE_SSL,
+  pgSslMode: process.env.PGSSLMODE,
+  caPresent: Boolean(process.env.DATABASE_SSL_CA),
+  caLength: process.env.DATABASE_SSL_CA?.length ?? 0,
+  caHasBegin: process.env.DATABASE_SSL_CA?.includes("-----BEGIN CERTIFICATE-----") ?? false,
+  caHasEnd: process.env.DATABASE_SSL_CA?.includes("-----END CERTIFICATE-----") ?? false,
+});
+
 const checkReadiness = createReadinessProbe(pool);
 
 router.get("/healthz", (_req, res) => {
