@@ -233,13 +233,8 @@ async function loadPublishedPublications(
       if (error instanceof PublicationMetadataValidationError) {
         plugin.error(error.message);
       }
-      if (!allowEmptyPublicationsBootstrap) {
-        plugin.error(
-          "Could not load published publication metadata from PostgreSQL. Verify DATABASE_URL and database SSL configuration.",
-        );
-      }
       plugin.warn(
-        "[prerender-public-metadata] Bootstrap mode: publication database unavailable; continuing with zero prerendered publications. No publication pages, structured data, or sitemap entries were generated.",
+        "[prerender-public-metadata] PostgreSQL unavailable during build; continuing with zero prerendered publications. No publication pages, structured data, or sitemap entries were generated.",
       );
       return [];
     }
