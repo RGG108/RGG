@@ -127,14 +127,31 @@ export function createReadinessProbe(
   };
 }
 
+const databaseCa = process.env.DATABASE_SSL_CA?.replaceAll("\\n", "\n");
+
 console.log("[database-ssl-config]", {
   databaseSsl: process.env.DATABASE_SSL,
   pgSslMode: process.env.PGSSLMODE,
-  caPresent: Boolean(process.env.DATABASE_SSL_CA),
-  caLength: process.env.DATABASE_SSL_CA?.length ?? 0,
-  caHasBegin: process.env.DATABASE_SSL_CA?.includes("-----BEGIN CERTIFICATE-----") ?? false,
-  caHasEnd: process.env.DATABASE_SSL_CA?.includes("-----END CERTIFICATE-----") ?? false,
+  caPresent: Boolean(databaseCa),
+  caLength: databaseCa?.length ?? 0,
+  caHasBegin: databaseCa?.includes("-----BEGIN CERTIFICATE-----") ?? false,
+  caHasEnd: databaseCa?.includes("-----END CERTIFICATE-----") ?? false,
 });
+
+if (databaseCa) {
+  import("node:crypto").then(({ X509Certificate }) => {
+    try {
+      const certificate = new X509Certificate(databaseCa);
+      console.log("[database-ca-certificate]", {
+        subject: certificate.subject,
+        issuer: certificate.issuer,
+        fingerprint256: certificate.fingerprint256,
+      });
+    } catch (error) {
+      console.error("[database-ca-certificate] INVALID", error);
+    }
+  });
+}
 
 const checkReadiness = createReadinessProbe(pool);
 
