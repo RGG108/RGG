@@ -93,7 +93,15 @@ export function createReadinessProbe(
       outageStartedAt = undefined;
       retryCacheResponses = 0;
       return { status: "ready", recovery };
-    } catch {
+    } catch (error) {
+      console.error("[readyz] PostgreSQL readiness failure", {
+        name: error instanceof Error ? error.name : undefined,
+        message: error instanceof Error ? error.message : String(error),
+        code:
+          typeof error === "object" && error !== null && "code" in error
+            ? String(error.code)
+            : undefined,
+      });
       outageStartedAt ??= checkedAt;
       retryAfter = now() + retryDelayMs();
       return { status: "unavailable", source: "fresh-check" };
