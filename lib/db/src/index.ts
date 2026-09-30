@@ -20,7 +20,12 @@ function databaseSslOptions(environment: NodeJS.ProcessEnv) {
   return {
     rejectUnauthorized: true,
     ...(environment.DATABASE_SSL_CA
-      ? { ca: environment.DATABASE_SSL_CA.replaceAll("\\n", "\n") }
+      ? {
+          ca: environment.DATABASE_SSL_CA
+            .trim()
+            .replace(/^["']|["']$/g, "")
+            .replaceAll("\\n", "\n"),
+        }
       : {}),
   };
 }
