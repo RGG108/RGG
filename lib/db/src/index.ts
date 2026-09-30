@@ -45,8 +45,10 @@ function databaseSslOptions(environment: NodeJS.ProcessEnv) {
   const ca = normalizeDatabaseCa(environment.DATABASE_SSL_CA);
 
   return {
-    rejectUnauthorized: true,
-    ...(ca ? { ca } : {}),
+    // Hostinger PostgreSQL uses a self-signed server certificate.
+    // Keep the database connection encrypted with TLS, but do not
+    // require Node to validate that certificate against a public CA.
+    rejectUnauthorized: false,
   };
 }
 
