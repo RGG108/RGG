@@ -149,6 +149,14 @@ console.log("[database-ssl-config]", {
   caLength: databaseCa?.length ?? 0,
   caHasBegin: databaseCa?.includes("-----BEGIN CERTIFICATE-----") ?? false,
   caHasEnd: databaseCa?.includes("-----END CERTIFICATE-----") ?? false,
+  rawBeginIndex: rawDatabaseCa.indexOf("-----BEGIN CERTIFICATE-----"),
+  rawEndIndex: rawDatabaseCa.indexOf("-----END CERTIFICATE-----"),
+  rawFirstCharCodes: Array.from(rawDatabaseCa.slice(0, 35)).map((c) =>
+    c.charCodeAt(0),
+  ),
+  normalizedFirstCharCodes: databaseCa
+    ? Array.from(databaseCa.slice(0, 35)).map((c) => c.charCodeAt(0))
+    : [],
 });
 
 if (databaseCa) {
