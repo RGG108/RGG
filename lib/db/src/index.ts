@@ -43,7 +43,7 @@ function databaseConnectionString(environment: NodeJS.ProcessEnv) {
 
 export const pool = new Pool({
   connectionString: databaseConnectionString(process.env),
-  connectionTimeoutMillis: 500,
+  connectionTimeoutMillis: 5000,
   ssl: databaseSslOptions(process.env),
 });
 export const db = drizzle(pool, { schema });
