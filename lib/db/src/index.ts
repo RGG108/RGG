@@ -10,23 +10,43 @@ if (!process.env.DATABASE_URL) {
   );
 }
 
+function normalizeDatabaseCa(value: string | undefined) {
+  if (!value) return undefined;
+
+  const beginMarker = "-----BEGIN CERTIFICATE-----";
+  const endMarker = "-----END CERTIFICATE-----";
+
+  const normalized = value
+    .replaceAll("\\n", "\n")
+    .replace(/\\r/g, "")
+    .replace(/\r/g, "");
+
+  const begin = normalized.indexOf(beginMarker);
+  const end = normalized.indexOf(endMarker);
+
+  if (begin === -1 || end === -1 || end < begin) {
+    return normalized.trim();
+  }
+
+  return normalized
+    .slice(begin, end + endMarker.length)
+    .trim();
+}
+
 function databaseSslOptions(environment: NodeJS.ProcessEnv) {
   const enabled =
     environment.DATABASE_SSL?.toLowerCase() === "true" ||
     ["require", "verify-ca", "verify-full"].includes(
       environment.PGSSLMODE?.toLowerCase() ?? "",
     );
+
   if (!enabled) return undefined;
+
+  const ca = normalizeDatabaseCa(environment.DATABASE_SSL_CA);
+
   return {
     rejectUnauthorized: true,
-    ...(environment.DATABASE_SSL_CA
-      ? {
-          ca: environment.DATABASE_SSL_CA
-            .trim()
-            .replace(/^["']|["']$/g, "")
-            .replaceAll("\\n", "\n"),
-        }
-      : {}),
+    ...(ca ? { ca } : {}),
   };
 }
 

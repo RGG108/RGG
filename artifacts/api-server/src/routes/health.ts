@@ -127,7 +127,20 @@ export function createReadinessProbe(
   };
 }
 
-const databaseCa = process.env.DATABASE_SSL_CA?.replaceAll("\\n", "\n");
+const rawDatabaseCa = process.env.DATABASE_SSL_CA ?? "";
+const beginIndex = rawDatabaseCa.indexOf("-----BEGIN CERTIFICATE-----");
+const endMarker = "-----END CERTIFICATE-----";
+const endIndex = rawDatabaseCa.indexOf(endMarker);
+
+const databaseCa =
+  beginIndex >= 0 && endIndex >= beginIndex
+    ? rawDatabaseCa
+        .slice(beginIndex, endIndex + endMarker.length)
+        .replaceAll("\\n", "\n")
+        .replace(/\\r/g, "")
+        .replace(/\r/g, "")
+        .trim()
+    : undefined;
 
 console.log("[database-ssl-config]", {
   databaseSsl: process.env.DATABASE_SSL,
